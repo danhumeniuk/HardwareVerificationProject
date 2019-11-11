@@ -5,6 +5,9 @@
 \usepackage{caption}
 \usepackage{url}
 \usepackage[margin=1in]{geometry}
+\usepackage{amsmath}
+\usepackage{algorithm}
+\usepackage[noend]{algpseudocode}
 
 \newcommand\blfootnote[1]{%
   \begingroup
@@ -25,6 +28,16 @@
 \section{Introduction}
 
 For our term project in ECE 5745, we intend to perform verification of a sequential Elliptic Curve Cryptography (ECC) circuit. The design we are working with relies on  one scalar and one point (two evenly sized $x$ and $y$ coordinates) over two busses and multiplied over an arbitrary elliptical curve using modular arithmetic. The result is then output. The design relies on sequential logic so we will be using some techniques from \cite{Kalla} to traverse the Finite State Machine (FSM) used in the implementation of the circuit.
+
+\section{Our Starting Point}
+
+To begin, we will implement a Breadth First Search (BFS) Traversal algorithm for the FSM. The algorithm can be found in \cite{Kalla} and is described as follows:
+
+\begin{algorithm}
+\caption{BFS Traversal for FSM Reachability}
+
+\end{algorithm}
+
 \section{Conclusion}
 
 
