@@ -1,10 +1,10 @@
-\documentclass[11pt]{report}
+\documentclass[12pt]{report}
 \usepackage{graphicx}
 \usepackage{float}
 \usepackage{lettrine}
 \usepackage{caption}
 \usepackage{url}
-
+\usepackage[margin=1in]{geometry}
 
 \newcommand\blfootnote[1]{%
   \begingroup
@@ -13,7 +13,7 @@
   \endgroup
 }
 
-\title{Verification of Sequential 17-bit Elliptic Curve Cryptography Circuits}
+\title{Verification of Sequential Elliptic Curve Cryptography Circuits}
 \author{Jaden Simon - simonjaden223@gmail.com \\ \and
 	   Daniel Humeniuk - d.humeniuk@utah.edu}
 
@@ -24,8 +24,7 @@
 
 \section{Introduction}
 
-Test 1 \cite{Sun} Test2 \cite{Kalla}
-
+For our term project in ECE 5745, we intend to perform verification of a sequential Elliptic Curve Cryptography (ECC) circuit. The design we are working with relies on  one scalar and one point (two evenly sized $x$ and $y$ coordinates) over two busses and multiplied over an arbitrary elliptical curve using modular arithmetic. The result is then output. The design relies on sequential logic so we will be using some techniques from \cite{Kalla} to traverse the Finite State Machine (FSM) used in the implementation of the circuit.
 \section{Conclusion}
 
 
