@@ -7,6 +7,7 @@
 \usepackage[margin=1in]{geometry}
 \usepackage{amsmath}
 \usepackage{algorithm}
+%\usepackage[]{algorithm2e}
 \usepackage[noend]{algpseudocode}
 
 \newcommand\blfootnote[1]{%
@@ -36,7 +37,29 @@ To begin, we will implement a Breadth First Search (BFS) Traversal algorithm for
 \begin{algorithm}
 \caption{BFS Traversal for FSM Reachability}
 
+{\textbf{Input:} Transition function $\Delta$, initial state $S^0$}
+
+{$from^0=reached=S^0$}
+
+{\textbf{Do:}}
+
+\hspace*{6mm}{$i \leftarrow i + 1 $}
+
+\hspace*{6mm}{$to^i \leftarrow Img(\Delta, from^{i-1}) $}
+
+\hspace*{6mm}{$new^i \leftarrow to^i \cap reached$}
+
+\hspace*{6mm}{$reached \leftarrow reached \cup new^i$}
+
+\hspace*{6mm}{$from^i \leftarrow new^i$}
+
+{\textbf{While:} $new^i != 0$}
+
+{\textbf{Return:} $reached$}
+
 \end{algorithm}
+
+This algorithm will provide us with the the representation of the reached states in every step which we can then over $\mathcal{F}_2^k$. 
 
 \section{Conclusion}
 
