@@ -7,8 +7,8 @@
 \usepackage[margin=1in]{geometry}
 \usepackage{amsmath}
 \usepackage{algorithm}
-%\usepackage[]{algorithm2e}
 \usepackage[noend]{algpseudocode}
+\usepackage{amssymb}
 
 \newcommand\blfootnote[1]{%
   \begingroup
@@ -35,25 +35,27 @@ For our term project in ECE 5745, we intend to perform verification of a sequent
 To begin, we will implement a Breadth First Search (BFS) Traversal algorithm for the FSM. The algorithm can be found in \cite{Kalla} and is described as follows:
 
 \begin{algorithm}
-\caption{BFS Traversal for FSM Reachability}
+\caption{Algebraic Geometry based FSM Traversal}
 
-{\textbf{Input:} Transition function $\Delta$, initial state $S^0$}
+{\textbf{Input:} The circuit's characteristic polynomial ideal $J_{ckt}$, initial state polynomial $\mathcal{F}(S)$, and LEX term order: bit-level variables $x,s,t >$ PS word S $>$ NS word $T$}
 
-{$from^0=reached=S^0$}
+{$from^0=reached=\mathcal{F}(S)$}
 
 {\textbf{Do:}}
 
 \hspace*{6mm}{$i \leftarrow i + 1 $}
 
-\hspace*{6mm}{$to^i \leftarrow Img(\Delta, from^{i-1}) $}
+\hspace*{6mm}{$G \leftarrow GB(J_{ckt}, J_{v}, from^{i-1}) $}
 
-\hspace*{6mm}{$new^i \leftarrow to^i \cap reached$}
+\hspace*{6mm}{$to^i \leftarrow G \cap \mathbb{F}_{2^k}[T]$}
 
-\hspace*{6mm}{$reached \leftarrow reached \cup new^i$}
+\hspace*{6mm}{$new^i \leftarrow to^i + (T^{2^k} - T) : reached$}
 
-\hspace*{6mm}{$from^i \leftarrow new^i$}
+\hspace*{6mm}{$reached \leftarrow reached*new^i$}
 
-{\textbf{While:} $new^i != 0$}
+\hspace*{6mm}{$from^i \leftarrow new^i(S$/$T)$}
+
+{\textbf{While:} $new^i != 1$}
 
 {\textbf{Return:} $reached$}
 
