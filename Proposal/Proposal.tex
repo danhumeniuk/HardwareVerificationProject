@@ -30,9 +30,11 @@
 
 For our term project in ECE 5745, we intend to perform verification of a sequential Elliptic Curve Cryptography (ECC) circuit. The design we are working with relies on  one scalar and one point (two evenly sized $x$ and $y$ coordinates) over two busses and multiplied over an arbitrary elliptical curve using modular arithmetic. The result is then output. The design relies on sequential logic so we will be using some techniques from \cite{Kalla} to traverse the Finite State Machine (FSM) used in the implementation of the circuit.
 
+We will be studying a 3-bit ECC circuit as a proof of concept. ECC relies on a much larger set but for time's sake, we are verifying a much smaller circuit. 
+
 \section{Our Starting Point}
 
-To begin, we will implement a Breadth First Search (BFS) Traversal algorithm for the FSM. The algorithm can be found in \cite{Kalla} and is described as follows:
+To begin, we will implement an Algebraic Geometry based algorithm for the FSM. The algorithm can be found in \cite{Kalla} and is described as follows:
 
 \begin{algorithm}
 \caption{Algebraic Geometry based FSM Traversal}
@@ -61,7 +63,7 @@ To begin, we will implement a Breadth First Search (BFS) Traversal algorithm for
 
 \end{algorithm}
 
-This algorithm will provide us with the the representation of the reached states in every step which we can then over $\mathcal{F}_2^k$. The variables $from$, $reached$, $to$, and $new$ represent the functions of sets in the states.
+This algorithm will provide us with the the representation of the reached states in every step which we can then over $\mathbb{F}_{2^k}$. The algorithm uses the Groebner basis of the ideal $J$ and the vanishing ideal $J_0$. This Groebner basis will be used to denote the set of next states in the FSM. 
 
 \section{Conclusion}
 
