@@ -52,33 +52,24 @@ A specification polynomial for the point-multiplier seems even more complicated,
 
 \iffalse % Not doing this algorithm 
 \begin{algorithm}
-\caption{Implicit Unrolling for Sequential GF Circuit Verification}
-
-{\textbf{Input:} The circuit's characteristic polynomial ideal $J_{ckt}$, vanishing ideal $J_{0}$, initial state ideal for output R(=0), inputs $\mathcal{G}(A_{init})$, $\mathcal{H}(B_{init})$}
-\\
-{\textbf{Output:} Circuit function $R_{final}$ after $k$ cycles of $A_{init}$, $B_{init}$}
-
-{$from^0(R, A, B) = $}
-
+\caption{Algebraic Geometry based FSM Traversal}
+{\textbf{Input:} The circuit's characteristic polynomial ideal $J_{ckt}$, initial state polynomial $\mathcal{F}(S)$, and LEX term order: bit-level variables $x,s,t >$ PS word S $>$ NS word $T$}
+{$from^0=reached=\mathcal{F}(S)$}
 {\textbf{Do:}}
-
 \hspace*{6mm}{$i \leftarrow i + 1 $}
-
 \hspace*{6mm}{$G \leftarrow GB(J_{ckt}, J_{v}, from^{i-1}) $}
-
 \hspace*{6mm}{$to^i \leftarrow G \cap \mathbb{F}_{2^k}[T]$}
-
 \hspace*{6mm}{$new^i \leftarrow to^i + (T^{2^k} - T) : reached$}
-
 \hspace*{6mm}{$reached \leftarrow reached*new^i$}
-
 \hspace*{6mm}{$from^i \leftarrow new^i(S$/$T)$}
-
 {\textbf{While:} $new^i != 1$}
-
 {\textbf{Return:} $reached$}
 
 \end{algorithm}
+
+This algorithm will provide us with the the representation of the reached states in every step which we can then over $\mathcal{F}_2^k$. The variables $from$, $reached$, $to$, and $new$ represent the functions of sets in the states.
+This algorithm will provide us with the the representation of the reached states in every step which we can then over $\mathbb{F}_{2^k}$. The algorithm uses the Groebner basis of the ideal $J$ and the vanishing ideal $J_0$. This Groebner basis will be used to denote the set of next states in the FSM. 
+
 \fi
 
 
