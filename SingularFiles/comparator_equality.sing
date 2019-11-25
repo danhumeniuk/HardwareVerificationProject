@@ -1,0 +1,29 @@
+// GCD3 spec mining
+
+ring r = (2, X), (a0, a1, a2, b0, b1, b2, m0, m1, m2, m3, e, t, z, A, B), lp;
+
+minpoly = X3 + X + 1;
+
+// Comparator
+// First level
+poly f3 = m0 + a0 + b0 + 1; // XNOR
+poly f4 = m1 + a1 + b1 + 1;
+poly f5 = m2 + a2 + b2 + 1;
+poly f6 = m3 + (a2 * (b2 + 1)) + 1;
+
+// Second level
+poly f7 = e + (m0 * m1 * m2);
+// End Comparator
+
+poly f52 = A + a2 * X2 + a1 * X + a0;
+poly f53 = B + b2 * X2 + b1 * X + b0;
+
+// Comparator test
+poly f_spec = z + A + B + 1;
+poly f_m = t*(z + e) + 1;
+ideal Jt = (a2^2 + a2), (a1^2 + a1), (a0^2 + a0), (b2^2 + b2), (b1^2 + b1), (b0^2 + b0), (e^2 + e), (f_spec^2 + f_spec), (f_m^2 + f_m), (t^2 + t), f3, f4, f5, f6, f7, f52, f53, (m0^2 + m0), (m1^2 + m1), (m2^2 + m2), (m3^2 + m3), f_spec, f_m, (A^4 + A), (B^4 + B), (z^2 + z);
+
+// Ideals with vanishing polys
+
+// Do vanishing polys
+

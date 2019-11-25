@@ -1,87 +1,164 @@
 // GCD3 spec mining
 
-ring r = (2, X), (a0, a1, a2, b0, b1, b2, c0, c1, m0, m1, m2, m3, n0, n1, n2, p0, q0, q1, r0, r1, e, g, adder1, adder2, amuxEn, bmuxEn, regAEn, regBEn, regCEn, regDEn, amux1, amux2, bmux1, bmux2, dmux1, dmux2, dmux3, A, B, C, D), lp;
+ring r = (2, X), (a0, a1, a2, b0, b1, b2, c0, c1, d0, d1, d2, n_a0, n_a1, n_a2, n_b0, n_b1, n_b2, n_c0, n_c1, m0, m1, m2, m3, n0, n1, n2, p0, q0, q1, r0, r1, e, g, t, z, adder1, adder2, amuxEn, bmuxEn, regAEn, regBEn, regCEn, regDEn, amux1, amux2, bmux1, bmux2, dmux1, dmux2, dmux3, n_A, n_B, n_C, A, B, C, D), lp;
 
 minpoly = X3 + X + 1;
 
 // A + B Adders
-poly adder1 = a1 + b1;
-poly adder2 = a2 + b2;
+poly f1 = adder1 + a1 + b1;
+poly f2 = adder2 + a2 + b2;
 
 // Comparator
 // First level
-poly m0 = a0 + b0 + 1; // XNOR
-poly m1 = a1 + b1 + 1;
-poly m2 = a2 + b2 + 1;
-poly m3 = (a2 * (b2 + 1)) + 1;
+poly f3 = m0 + a0 + b0 + 1; // XNOR
+poly f4 = m1 + a1 + b1 + 1;
+poly f5 = m2 + a2 + b2 + 1;
+poly f6 = m3 + (a2 * (b2 + 1)) + 1;
 
 // Second level
-poly e = m0 * m1 * m2;
-poly n0 = m1 * m2;
-poly n1 = a0 * b0;
-poly n2 = m2 * a1 * (b1 + 1);
+poly f7 = e + (m0 * m1 * m2);
+poly f8 = n0 + (m1 * m2);
+poly f9 = n1 + (a0 * b0);
+poly f10 = n2 + (m2 * (a1 * (b1 + 1)));
 
 // Last level + output
-poly p0 = n0 * n1;
-poly g = p0 + n2 + m3; 
+poly f11 = p0 + (n0 * n1);
+poly f12 = g + p0 + n2 + m3; 
 // End Comparator
 
 // Register A Block
-poly amuxEn = a0 * b0 * (e + g + e * g);
-poly amux1 = (adder1 * amuxEn) + (a1 * (amuxEn + 1));
-poly amux2 = (adder2 * amuxEn) + (a2 * (amuxEn + 1));
+poly f13 = amuxEn + (a0 * b0 * (e + g + e * g));
+poly f14 = amux1 + ((adder1 * amuxEn) + (a1 * (amuxEn + 1)));
+poly f15 = amux2 + ((adder2 * amuxEn) + (a2 * (amuxEn + 1)));
 
-poly regAEn = (a0 + 1) + amuxEn + ((a0 + 1) * amuxEn); // OR
+poly f16 = regAEn + (a0 + 1) + amuxEn + ((a0 + 1) * amuxEn); // OR
 // How to do a register? Not sure
-poly a0 = (a0 * (regAEn + 1)) + (amux1 * regAEn);
-poly a1 = (a1 * (regAEn + 1)) + (amux2 * regAEn);
-poly a2 = (a2 * (regAEn + 1));
+poly f17 = n_a0 + (a0 * (regAEn + 1)) + (amux1 * regAEn);
+poly f18 = n_a1 + (a1 * (regAEn + 1)) + (amux2 * regAEn);
+poly f19 = n_a2 + (a2 * (regAEn + 1));
 // End Register A Block
 
 // Register B Block
-poly bmuxEn = a0 * b0 * (g + 1);
-poly bmux1 = (adder1 * bmuxEn) + (b1 * (bmuxEn + 1));
-poly bmux2 = (adder2 * bmuxEn) + (b2 * (bmuxEn + 1));
+poly f20 = bmuxEn + (a0 * b0 * (g + 1));
+poly f21 = bmux1 + (adder1 * bmuxEn) + (b1 * (bmuxEn + 1));
+poly f22 = bmux2 + (adder2 * bmuxEn) + (b2 * (bmuxEn + 1));
 
-poly regBEn = (b0 + 1) + amuxEn + ((b0 + 1) * amuxEn); // OR
-poly b0 = (b0 * (regBEn + 1)) + (bmux1 * regBEn);
-poly b1 = (b1 * (regBEn + 1)) + (bmux2 * regBEn);
-poly b2 = (b2 * (regBEn + 1));
+poly f23 = regBEn + (b0 + 1) + amuxEn + ((b0 + 1) * amuxEn); // OR
+poly f24 = n_b0 + (b0 * (regBEn + 1)) + (bmux1 * regBEn);
+poly f25 = n_b1 + (b1 * (regBEn + 1)) + (bmux2 * regBEn);
+poly f26 = n_b2 + (b2 * (regBEn + 1));
 // End Register B Block
 
 // Accumulator C Block
-poly regCEn = (a0 * b0) + 1;
-poly q0 = regCEn + c0;
-poly q1 = regCEn * c1;
-poly c0 = (c0 * (regCEn + 1)) + (q0 * regCEn);
-poly c1 = (c1 * (regCEn + 1)) + (q1 * regCEn);
+poly f27 = regCEn + (a0 * b0) + 1;
+poly f28 = q0 + regCEn + c0;
+poly f29 = q1 + regCEn * c1;
+poly f30 = n_c0 + (c0 * (regCEn + 1)) + (q0 * regCEn);
+poly f31 = n_c1 + (c1 * (regCEn + 1)) + (q1 * regCEn);
 // End Accumulator C Block
 
 // Output D Block
-poly r0 = c0 + c1 + (c0 * c1);
-poly r1 = (a2 + 1) * (a1 + 1) * (a0 + 1);
-poly dmux1 = b0 * (r0 + 1);
-poly dmux2 = (b1 * ((b1 + 1) * (c1 + 1))) + (b0 * ((c1 + 1) * c0));
-poly dmux3 = (b2 * ((b2 + 1) * (c1 + 1))) + (b1 * ((c1 + 1) * c0)) + (b1 * (c1 * (c0 + 1)));
-poly regDEn = e + r1 + (e * r1);
-poly d0 = (d0 * (regDEn + 1)) + (dmux1 * regDEn);
-poly d1 = (d1 * (regDEn + 1)) + (dmux2 * regDEn);
-poly d2 = (d2 * (regDEn + 1)) + (dmux3 * regDEn);
+poly f32 = r0 + c0 + c1 + (c0 * c1);
+poly f33 = r1 + ((a2 + 1) * (a1 + 1) * (a0 + 1));
+poly f34 = dmux1 + (b0 * (r0 + 1));
+poly f35 = dmux2 + (b1 * ((b1 + 1) * (c1 + 1))) + (b0 * ((c1 + 1) * c0));
+poly f36 = dmux3 + (b2 * ((b2 + 1) * (c1 + 1))) + (b1 * ((c1 + 1) * c0)) + (b1 * (c1 * (c0 + 1)));
+poly f37 = regDEn + e + r1 + (e * r1);
+poly f38 = d0 + (dmux1 * regDEn);
+poly f39 = d1 + (dmux2 * regDEn);
+poly f40 = d2 + (dmux3 * regDEn);
 // End Output D Block
 
-// Initial state with word-level polynomials (A and B are the inputs)
-poly a0 = 1;
-poly a1 = 1;
-poly a2 = 1;
-poly b0 = 1;
-poly b1 = 1;
-poly b2 = 1;
+// Word level variables
+poly f41 = A + a2 * X2 + a1 * X + a0;
+poly f42 = B + b2 * X2 + b1 * X + b0;
+poly f43 = C + c1 * X + c0;
+poly f44 = D + d2 * X2 + d1 * X + d0;
+poly f45 = n_A + n_a2 * X2 + n_a1 * X + n_a0;
+poly f46 = n_B + n_b2 * X2 + n_b1 * X + n_b0;
+poly f47 = n_C + n_c1 * X + n_c0;
 
-poly c0 = 0;
-poly c1 = 0;
-poly d0 = 0;
-poly d1 = 0;
-poly d2 = 0;
-poly d3 = 0;
+// Initial state ? currently would set all to 0
+//poly f48 = a0;
+//poly f49 = a1;
+//poly f50 = a2;
+//poly f51 = b0;
+//poly f52 = b1;
+//poly f53 = b2;
+//poly f54 = c0;
+//poly f55 = c1;
+//poly f56 = d0;
+//poly f57 = d1;
+//poly f58 = d2;
 
-poly A = a0
+
+// Ideal described by this circuit
+ideal J = f1, f2, f3, f4, f5, f6, f7, f8, f9, f10, f11, f12, f13, f14, f15, f16, f17, f18, f19, f20, f21, f22, f23, f24, f25, f26, f27, f28, f29, f30, f31, f32, f33, f34, f35, f36, f37, f38, f39, f40, f41, f42, f43, f44, f45, f46, f47;
+
+// Vanishing polynomials
+poly f59 = a0^2 + a0;
+poly f60 = a1^2 + a1;
+poly f61 = a2^2 + a2;
+poly f62 = b0^2 + b0;
+poly f63 = b1^2 + b1;
+poly f64 = b2^2 + b2;
+poly f65 = c0^2 + c0;
+poly f66 = c1^2 + c1;
+poly f67 = d0^2 + d0;
+poly f68 = d1^2 + d1;
+poly f69 = d2^2 + d2;
+poly f70 = n_a0^2 + n_a0;
+poly f71 = n_a1^2 + n_a1;
+poly f72 = n_a2^2 + n_a2;
+poly f73 = n_b0^2 + n_b0;
+poly f74 = n_b1^2 + n_b1;
+poly f75 = n_b2^2 + n_b2;
+poly f76 = n_c0^2 + n_c0;
+poly f77 = n_c1^2 + n_c1;
+poly f78 = m0^2 + m0;
+poly f79 = m1^2 + m1;
+poly f80 = m2^2 + m2;
+poly f81 = m3^2 + m3;
+poly f82 = n0^2 + n0;
+poly f83 = n1^2 + n1;
+poly f84 = n2^2 + n2;
+n_A, n_B, n_C, A, B, C, D
+poly f85 = p0^2 + p0;
+poly f86 = q0^2 + q0;
+poly f87 = q1^2 + q1;
+poly f88 = r0^2 + r0;
+poly f89 = r1^2 + r1;
+poly f90 = e^2 + e;
+poly f91 = g^2 + g;
+poly f92 = t^2 + t;
+poly f93 = z^2 + z;
+poly f94 = adder1^2 + adder1;
+poly f95 = adder2^2 + adder2;
+poly f96 = amuxEn^2 + amuxEn;
+poly f97 = bmuxEn^2 + bmuxEn;
+poly f98 = regAEn^2 + regAEn;
+poly f99 = regBEn^2 + regBEn;
+poly f100 = regCEn^2 + regCEn;
+poly f101 = regDEn^2 + regDEn;
+poly f102 = amux1^2 + amux1;
+poly f103 = amux2^2 + amux2;
+poly f104 = bmux1^2 + bmux1;
+poly f105 = bmux2^2 + bmux2;
+poly f106 = dmux1^2 + dmux1;
+poly f107 = dmux2^2 + dmux2;
+poly f108 = dmux3^2 + dmux3;
+poly f109 = n_A^4 + n_A;
+poly f110 = n_B^4 + n_B;
+poly f111 = n_C^3 + n_C;
+poly f112 = A^4 + A;
+poly f113 = B^4 + B;
+poly f114 = C^3 + C;
+poly f115 = D^4 + D;
+
+
+// Ideal J0 = f59 + .. + f115;
+
+
+
+
+
