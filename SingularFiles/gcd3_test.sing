@@ -1,0 +1,87 @@
+// GCD3 spec mining
+
+ring r = (2, X), (a0, a1, a2, b0, b1, b2, c0, c1, m0, m1, m2, m3, n0, n1, n2, p0, q0, q1, r0, r1, e, g, adder1, adder2, amuxEn, bmuxEn, regAEn, regBEn, regCEn, regDEn, amux1, amux2, bmux1, bmux2, dmux1, dmux2, dmux3, A, B, C, D), lp;
+
+minpoly = X3 + X + 1;
+
+// A + B Adders
+poly adder1 = a1 + b1;
+poly adder2 = a2 + b2;
+
+// Comparator
+// First level
+poly m0 = a0 + b0 + 1; // XNOR
+poly m1 = a1 + b1 + 1;
+poly m2 = a2 + b2 + 1;
+poly m3 = (a2 * (b2 + 1)) + 1;
+
+// Second level
+poly e = m0 * m1 * m2;
+poly n0 = m1 * m2;
+poly n1 = a0 * b0;
+poly n2 = m2 * a1 * (b1 + 1);
+
+// Last level + output
+poly p0 = n0 * n1;
+poly g = p0 + n2 + m3; 
+// End Comparator
+
+// Register A Block
+poly amuxEn = a0 * b0 * (e + g + e * g);
+poly amux1 = (adder1 * amuxEn) + (a1 * (amuxEn + 1));
+poly amux2 = (adder2 * amuxEn) + (a2 * (amuxEn + 1));
+
+poly regAEn = (a0 + 1) + amuxEn + ((a0 + 1) * amuxEn); // OR
+// How to do a register? Not sure
+poly a0 = (a0 * (regAEn + 1)) + (amux1 * regAEn);
+poly a1 = (a1 * (regAEn + 1)) + (amux2 * regAEn);
+poly a2 = (a2 * (regAEn + 1));
+// End Register A Block
+
+// Register B Block
+poly bmuxEn = a0 * b0 * (g + 1);
+poly bmux1 = (adder1 * bmuxEn) + (b1 * (bmuxEn + 1));
+poly bmux2 = (adder2 * bmuxEn) + (b2 * (bmuxEn + 1));
+
+poly regBEn = (b0 + 1) + amuxEn + ((b0 + 1) * amuxEn); // OR
+poly b0 = (b0 * (regBEn + 1)) + (bmux1 * regBEn);
+poly b1 = (b1 * (regBEn + 1)) + (bmux2 * regBEn);
+poly b2 = (b2 * (regBEn + 1));
+// End Register B Block
+
+// Accumulator C Block
+poly regCEn = (a0 * b0) + 1;
+poly q0 = regCEn + c0;
+poly q1 = regCEn * c1;
+poly c0 = (c0 * (regCEn + 1)) + (q0 * regCEn);
+poly c1 = (c1 * (regCEn + 1)) + (q1 * regCEn);
+// End Accumulator C Block
+
+// Output D Block
+poly r0 = c0 + c1 + (c0 * c1);
+poly r1 = (a2 + 1) * (a1 + 1) * (a0 + 1);
+poly dmux1 = b0 * (r0 + 1);
+poly dmux2 = (b1 * ((b1 + 1) * (c1 + 1))) + (b0 * ((c1 + 1) * c0));
+poly dmux3 = (b2 * ((b2 + 1) * (c1 + 1))) + (b1 * ((c1 + 1) * c0)) + (b1 * (c1 * (c0 + 1)));
+poly regDEn = e + r1 + (e * r1);
+poly d0 = (d0 * (regDEn + 1)) + (dmux1 * regDEn);
+poly d1 = (d1 * (regDEn + 1)) + (dmux2 * regDEn);
+poly d2 = (d2 * (regDEn + 1)) + (dmux3 * regDEn);
+// End Output D Block
+
+// Initial state with word-level polynomials (A and B are the inputs)
+poly a0 = 1;
+poly a1 = 1;
+poly a2 = 1;
+poly b0 = 1;
+poly b1 = 1;
+poly b2 = 1;
+
+poly c0 = 0;
+poly c1 = 0;
+poly d0 = 0;
+poly d1 = 0;
+poly d2 = 0;
+poly d3 = 0;
+
+poly A = a0
