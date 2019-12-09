@@ -1,0 +1,87 @@
+// FSM traversal testing w/ 3-bit shifter.
+
+ring r = (2, X), (a0, a1, a2, n_a0, n_a1, n_a2, b0, b1, b2, n_b0, n_b1, n_b2, c0, z0, z1, z2, Z, A, B, n_A, n_B), lp;
+
+minpoly = X3 + X + 1; // for 3 bits
+
+// Word-level
+poly f1 = Z + z2 * X2 + z1 * X + z0;
+poly f2 = A + a2 * X2 + a1 * X + a0;
+poly f3 = B + b1 * X + b0;
+poly f4 = n_A + n_a2 * X2 + n_a1 * X + n_a0;
+poly f5 = n_B + n_b2 * X2 + n_b1 * X + n_b0;
+
+// If B is 0, then set output and stop shift
+poly f6 = c0 + (b2 + 1)*(b1 + 1)*(b0 + 1);
+poly f7 = n_a0 + (c0 * a0) + ((c0 + 1) * a1);
+poly f8 = n_a1 + (c0 * a1) + ((c0 + 1) * a2);
+poly f9 = n_a2 + (c0 * a2);
+poly f10 = z0 + (c0 * a0);
+poly f11 = z1 + (c0 * a1);
+poly f12 = z2 + (c0 * a2);
+
+// Subtract 1 from B 
+poly f13 = n_b0 + (b1 * (b0 + 1));
+poly f14 = n_b1 + (b1 * b0);
+poly f52 = n_b2;
+
+// Initialize variables
+//poly f60 = A + X2 + 1;
+//poly f61 = B + 1;
+
+ideal J = f1, f2, f3, f4, f5, f6, f7, f8, f9, f10, f11, f12, f13, f14, f52;
+
+// Vanishing polynomials
+poly f15 = Z^8 + Z;
+poly f16 = A^8 + A;
+poly f17 = B^8 + B;
+poly f18 = n_A^8 + n_A;
+poly f19 = n_B^8 + n_B;
+poly f20 = a0^2 + a0;
+poly f21 = a1^2 + a1;
+poly f22 = a2^2 + a2;
+poly f23 = b0^2 + b0;
+poly f24 = b1^2 + b1;
+poly f25 = n_a0^2 + n_a0;
+poly f26 = n_a1^2 + n_a1;
+poly f27 = n_a2^2 + n_a2;
+poly f28 = n_b0^2 + n_b0;
+poly f29 = n_b1^2 + n_b1;
+poly f30 = z0^2 + z0;
+poly f31 = z1^2 + z1;
+poly f32 = z2^2 + z2;
+poly f33 = c0^2 + c0;
+poly f50 = b2^2 + b2;
+poly f51 = n_b2^2 + n_b2;
+
+
+ideal J0 = f15, f16, f17, f18, f19, f20, f21, f22, f23, f24, f25, f26, f27, f28, f29, f30, f31, f32, f33, f50, f51;
+//ideal Jt = J + J0;
+
+
+//ideal gb = groebner(Jt);
+//gb = eliminate(gb, a0*a1*a2*b0*b1*b2*c0*n_a0*n_a1*n_a2*n_b0*n_b1*n_b2*z0*z1*z2);
+
+// Loop while state changes
+poly current_A = A + X2 + X + 1;
+poly current_B = B + 1;
+
+ideal Jc;
+ideal Jt;
+ideal gb;
+
+while (current_B != B)
+{
+	Jc = current_A, current_B;
+	Jt = J + J0 + Jc;
+
+	gb = groebner(Jt);
+	gb = eliminate(gb, a0*a1*a2*b0*b1*b2*c0*n_a0*n_a1*n_a2*n_b0*n_b1*n_b2*z0*z1*z2);
+
+	// Get next A state
+	eliminate(gb, A*B*n_B*Z);
+	current_A = subst(eliminate(gb, A*B*n_B*Z)[1], n_A, A);
+
+	// Get next B state
+	current_B = subst(eliminate(gb, A*B*n_A*Z)[1], n_B, B);
+}

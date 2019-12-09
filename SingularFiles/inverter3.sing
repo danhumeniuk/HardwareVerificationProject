@@ -1,6 +1,6 @@
-// GCD3 spec mining
+// Finite field inverter circuit
 
-ring r = (2, X), (a0, a1, a2, b0, b1, b2, c0, c1, d0, d1, d2, n_a0, n_a1, n_a2, n_b0, n_b1, n_b2, n_c0, n_c1, m0, m1, m2, m3, n0, n1, n2, p0, q0, q1, r0, r1, e, g, t, z, adder1, adder2, amuxEn, bmuxEn, regAEn, regBEn, regCEn, regDEn, amux1, amux2, bmux1, bmux2, dmux1, dmux2, dmux3, D, A, B, C, n_C, n_B, n_A), lp;
+ring r = (2, X), (a0, a1, a2, b0, b1, b2, c0, c1, d0, d1, d2, n_a0, n_a1, n_a2, n_b0, n_b1, n_b2, n_c0, n_c1, m0, m1, m2, m3, n0, n1, n2, p0, q0, q1, r0, r1, e, g, t, z, adder1, adder2, amuxEn, bmuxEn, regAEn, regBEn, regCEn, regDEn, amux1, amux2, bmux1, bmux2, dmux1, dmux2, dmux3, n_A, n_B, n_C, A, B, C, D), lp;
 
 minpoly = X3 + X + 1;
 
@@ -58,13 +58,12 @@ poly f31 = n_c1 + (c1 * (regCEn + 1)) + (q1 * regCEn);
 // End Accumulator C Block
 
 // Output D Block
-//poly f32 = r0 + c0 + c1 + (c0 * c1);
-poly f33 = r1 + ((a2 + 1) * (a1 + 1) * (a0));
+poly f32 = r0 + c0 + c1 + (c0 * c1);
+poly f33 = r1 + ((a2 + 1) * (a1 + 1) * (a0 + 1));
 poly f34 = dmux1 + (b0 * (r0 + 1));
 poly f35 = dmux2 + (b1 * ((b1 + 1) * (c1 + 1))) + (b0 * ((c1 + 1) * c0));
 poly f36 = dmux3 + (b2 * ((b2 + 1) * (c1 + 1))) + (b1 * ((c1 + 1) * c0)) + (b1 * (c1 * (c0 + 1)));
-//poly f37 = regDEn + e + r1 + (e * r1);
-poly f37 = regDEn + 1;
+poly f37 = regDEn + e + r1 + (e * r1);
 poly f38 = d0 + (dmux1 * regDEn);
 poly f39 = d1 + (dmux2 * regDEn);
 poly f40 = d2 + (dmux3 * regDEn);
@@ -78,6 +77,20 @@ poly f44 = D + d2 * X2 + d1 * X + d0;
 poly f45 = n_A + n_a2 * X2 + n_a1 * X + n_a0;
 poly f46 = n_B + n_b2 * X2 + n_b1 * X + n_b0;
 poly f47 = n_C + n_c1 * X + n_c0;
+
+// Initial state ? currently would set all to 0
+//poly f48 = a0;
+//poly f49 = a1;
+//poly f50 = a2;
+//poly f51 = b0;
+//poly f52 = b1;
+//poly f53 = b2;
+//poly f54 = c0;
+//poly f55 = c1;
+//poly f56 = d0;
+//poly f57 = d1;
+//poly f58 = d2;
+
 
 // Ideal described by this circuit
 ideal J = f1, f2, f3, f4, f5, f6, f7, f8, f9, f10, f11, f12, f13, f14, f15, f16, f17, f18, f19, f20, f21, f22, f23, f24, f25, f26, f27, f28, f29, f30, f31, f32, f33, f34, f35, f36, f37, f38, f39, f40, f41, f42, f43, f44, f45, f46, f47;
@@ -135,25 +148,21 @@ poly f107 = dmux2^2 + dmux2;
 poly f108 = dmux3^2 + dmux3;
 poly f109 = n_A^8 + n_A;
 poly f110 = n_B^8 + n_B;
-poly f111 = n_C^8 + n_C;
+poly f111 = n_C^4 + n_C;
 poly f112 = A^8 + A;
 poly f113 = B^8 + B;
-poly f114 = C^8 + C;
+poly f114 = C^4 + C;
 poly f115 = D^8 + D;
 
 
 ideal J0 = f59, f60, f61, f62, f63, f64, f65, f66, f67, f68, f69, f70, f71, f72, f73, f74, f75, f76, f77, f78, f79, f80, f81, f82, f83, f84, f85, f86, f87, f88, f89, f90, f91, f92, f93, f94, f95, f96, f97, f98, f99, f100, f101, f102, f103, f104, f105, f106, f107, f108, f109, f110, f111, f112, f113, f114, f115;
 
-poly A_init = A + X2 + 1;
-poly B_init = B + X2 + 1;
-poly C_init = C;
+ideal Jt = J;
 
-ideal Jinit = A_init, B_init, C_init;
 
-ideal Jt = J + J0 + Jinit;
 
-ideal gb = groebner(Jt);
-gb = eliminate(gb, a0*a1*a2*b0*b1*b2*c0*c1*d0*d1*d2*n_a0*n_a1*n_a2*n_b0*n_b1*n_b2*n_c0*n_c1*m0*m1*m2*m3*n0*n1*n2*p0*q0*q1*r0*r1*e* g*t*z*adder1*adder2*amuxEn*bmuxEn*regAEn*regBEn*regCEn*regDEn*amux1*amux2*bmux1*bmux2*dmux1*dmux2*dmux3);
+
+
 
 
 
