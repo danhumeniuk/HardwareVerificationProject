@@ -64,7 +64,7 @@ ideal J0 = f15, f16, f17, f18, f19, f20, f21, f22, f23, f24, f25, f26, f27, f28,
 
 // Loop while state changes
 poly current_A = A + X2 + X + 1;
-poly current_B = B + 1;
+poly current_B = B + X + 1;
 
 ideal Jc;
 ideal Jt;

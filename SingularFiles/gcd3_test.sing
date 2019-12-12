@@ -42,8 +42,11 @@ poly f19 = n_a2 + (a2 * (regAEn + 1));
 poly f20 = bmuxEn + (a0 * b0 * (g + 1));
 poly f21 = bmux1 + (adder1 * bmuxEn) + (b1 * (bmuxEn + 1));
 poly f22 = bmux2 + (adder2 * bmuxEn) + (b2 * (bmuxEn + 1));
+//poly f21 = bmux1 + b1;
+//poly f22 = bmux2 + b2;
 
 poly f23 = regBEn + (b0 + 1) + amuxEn + ((b0 + 1) * amuxEn); // OR
+//poly f23 = regBEn + 1;
 poly f24 = n_b0 + (b0 * (regBEn + 1)) + (bmux1 * regBEn);
 poly f25 = n_b1 + (b1 * (regBEn + 1)) + (bmux2 * regBEn);
 poly f26 = n_b2 + (b2 * (regBEn + 1));
@@ -58,13 +61,15 @@ poly f31 = n_c1 + (c1 * (regCEn + 1)) + (q1 * regCEn);
 // End Accumulator C Block
 
 // Output D Block
-//poly f32 = r0 + c0 + c1 + (c0 * c1);
-poly f33 = r1 + ((a2 + 1) * (a1 + 1) * (a0));
+poly f32 = r0 + c0 + c1 + (c0 * c1);
+poly f33 = r1 + ((b2 + 1) * (b1 + 1) * (b0));
 poly f34 = dmux1 + (b0 * (r0 + 1));
-poly f35 = dmux2 + (b1 * ((b1 + 1) * (c1 + 1))) + (b0 * ((c1 + 1) * c0));
-poly f36 = dmux3 + (b2 * ((b2 + 1) * (c1 + 1))) + (b1 * ((c1 + 1) * c0)) + (b1 * (c1 * (c0 + 1)));
-//poly f37 = regDEn + e + r1 + (e * r1);
-poly f37 = regDEn + 1;
+poly f35 = dmux2 + (b1 * (r0 + 1)) + ((c1 + 1) * c0 * b0);
+poly f36 = dmux3 + (b2 * (r0 + 1)) + ((c1 + 1) * c0 * b1) + (c1 * (c0 + 1) * b0);
+//poly f34 = dmux1 + b0;
+//poly f35 = dmux2 + b1;
+//poly f36 = dmux3 + b2;
+poly f37 = regDEn + e + r1 + (e * r1);
 poly f38 = d0 + (dmux1 * regDEn);
 poly f39 = d1 + (dmux2 * regDEn);
 poly f40 = d2 + (dmux3 * regDEn);
@@ -145,14 +150,14 @@ poly f115 = D^8 + D;
 ideal J0 = f59, f60, f61, f62, f63, f64, f65, f66, f67, f68, f69, f70, f71, f72, f73, f74, f75, f76, f77, f78, f79, f80, f81, f82, f83, f84, f85, f86, f87, f88, f89, f90, f91, f92, f93, f94, f95, f96, f97, f98, f99, f100, f101, f102, f103, f104, f105, f106, f107, f108, f109, f110, f111, f112, f113, f114, f115;
 
 poly A_init = A + X2 + 1;
-poly B_init = B + X2 + 1;
+poly B_init = B + X + 1;
 poly C_init = C;
 
 ideal Jinit = A_init, B_init, C_init;
 
 ideal Jt = J + J0 + Jinit;
 
-ideal gb = groebner(Jt);
+ideal gb = slimgb(Jt);
 gb = eliminate(gb, a0*a1*a2*b0*b1*b2*c0*c1*d0*d1*d2*n_a0*n_a1*n_a2*n_b0*n_b1*n_b2*n_c0*n_c1*m0*m1*m2*m3*n0*n1*n2*p0*q0*q1*r0*r1*e* g*t*z*adder1*adder2*amuxEn*bmuxEn*regAEn*regBEn*regCEn*regDEn*amux1*amux2*bmux1*bmux2*dmux1*dmux2*dmux3);
 
 
