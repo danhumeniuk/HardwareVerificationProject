@@ -9,17 +9,17 @@ minpoly = X3 + X + 1;
 poly f3 = m0 + a0 + b0 + 1; // XNOR
 poly f4 = m1 + a1 + b1 + 1;
 poly f5 = m2 + a2 + b2 + 1;
-poly f6 = m3 + (a2 * (b2 + 1)) + 1;
+poly f6 = m3 + (a2 * (b2 + 1));
 
 // Second level
 poly f7 = e + (m0 * m1 * m2);
 poly f8 = n0 + (m1 * m2);
-poly f9 = n1 + (a0 * b0);
+poly f9 = n1 + (a0 * (b0 + 1));
 poly f10 = n2 + (m2 * (a1 * (b1 + 1)));
 
 // Last level + output
 poly f11 = p0 + (n0 * n1);
-poly f12 = g + p0 + n2 + m3; 
+poly f12 = g + ((p0 + n2 + (p0 * n2)) + m3) + ((p0 + n2 + (p0 * n2)) * m3);;
 // End Comparator
 
 poly f52 = A + a2 * X2 + a1 * X + a0;

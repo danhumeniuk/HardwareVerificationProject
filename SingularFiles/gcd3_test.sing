@@ -17,21 +17,21 @@ poly f2_b = sub2_b + (a1 * (b1 + 1)) + a2 + b2;
 poly f3 = m0 + a0 + b0 + 1; // XNOR
 poly f4 = m1 + a1 + b1 + 1;
 poly f5 = m2 + a2 + b2 + 1;
-poly f6 = m3 + (a2 * (b2 + 1)) + 1;
+poly f6 = m3 + (a2 * (b2 + 1));
 
 // Second level
 poly f7 = e + (m0 * m1 * m2);
 poly f8 = n0 + (m1 * m2);
-poly f9 = n1 + (a0 * b0);
+poly f9 = n1 + (a0 * (b0 + 1));
 poly f10 = n2 + (m2 * (a1 * (b1 + 1)));
 
 // Last level + output
 poly f11 = p0 + (n0 * n1);
-poly f12 = g + p0 + n2 + m3; 
+poly f12 = g + ((p0 + n2 + (p0 * n2)) + m3) + ((p0 + n2 + (p0 * n2)) * m3);;
 // End Comparator
 
 // Register A Block
-poly f13 = amuxEn + (a0 * b0 * (g + 1));
+poly f13 = amuxEn + (a0 * b0 * g);
 poly f14 = amux1 + ((sub1_a * amuxEn) + (a1 * (amuxEn + 1)));
 poly f15 = amux2 + ((sub2_a * amuxEn) + (a2 * (amuxEn + 1)));
 
@@ -43,7 +43,7 @@ poly f19 = n_a2 + (a2 * (regAEn + 1));
 // End Register A Block
 
 // Register B Block
-poly f20 = bmuxEn + (a0 * b0 * g);
+poly f20 = bmuxEn + (a0 * b0 * (g + 1));
 poly f21 = bmux1 + (sub1_b * bmuxEn) + (b1 * (bmuxEn + 1));
 poly f22 = bmux2 + (sub2_b * bmuxEn) + (b2 * (bmuxEn + 1));
 //poly f21 = bmux1 + b1;
@@ -57,8 +57,8 @@ poly f26 = n_b2 + (b2 * (regBEn + 1));
 // End Register B Block
 
 // Accumulator C Block
-poly f27 = regCEn + (a0 * b0) + 1;
-poly f28 = q0 + regCEn * c0;
+poly f27 = regCEn + ((a0 + 1) * (b0 + 1));
+poly f28 = q0 + regCEn + c0;
 poly f29 = q1 + regCEn * c1;
 poly f30 = n_c0 + (c0 * (regCEn + 1)) + (q0 * regCEn);
 poly f31 = n_c1 + (c1 * (regCEn + 1)) + (q1 * regCEn);
