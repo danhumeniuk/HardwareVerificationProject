@@ -28,7 +28,19 @@
 
 \section{Introduction}
 
-The purpose of this report is to discuss our findings and results of our formal verification project for ECE 5745. Our original proposal was centered around verifying a 3-bit Elliptical Curve Arithmetic Unit (ECAU) circuit as a proof of concept. After some studying, our project led us to studying a 3-bit greatest common divisor (GCD) which would be required in an ECAU. 
+The purpose of this report is to discuss our findings and results of our formal verification project for ECE 5745. Our original proposal was centered around verifying a 3-bit Elliptical Curve Arithmetic Unit (ECAU) circuit as a proof of concept. After some studying, our project led us to investigate the 3-bit greatest common divisor (GCD) circuit which would be required in a 3-bit ECAU. Our main point of investigation was to determine if verification of a 3-bit GCD circuit is trivial or nontrivial. Once this question could be answered, we could later explore if the verification could be easily transposed onto an $n$-bit GCD circuit.
+
+This report will detail our findings as well as identified areas of further interest and exploration.
+
+\section{Experiments and Test Setup}
+
+Our first starting point was designing a circuit that computed a 3-bit GCD. This circuit can be seen in Figure \ref{fig:gcd}. Once this circuit was created, it took some refining to ensure that it would act as expected. The GCD as implemented here would require at most $n$ clock cycles for an $n$-bit circuit. 
+
+\begin{figure}
+\includegraphics[scale=0.35]{images/gcd_page.png}
+\caption{Binary GCD Algorithm for $3$ bits}
+\label{fig:gcd}
+\end{figure}
 
 \section{Findings}
 
@@ -36,6 +48,6 @@ The purpose of this report is to discuss our findings and results of our formal 
 
 \bibliographystyle{IEEEtran}
 
-\bibliography{IEEEabrv,bib/ref}
+%\bibliography{IEEEabrv,bib/ref}
 
 \end{document}
