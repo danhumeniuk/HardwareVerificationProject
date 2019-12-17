@@ -34,13 +34,17 @@ This report will detail our findings as well as identified areas of further inte
 
 \section{Experiments and Test Setup}
 
-Our first starting point was designing a circuit that computed a 3-bit GCD. This circuit can be seen in Figure \ref{fig:gcd}. Once this circuit was created, it took some refining to ensure that it would act as expected. The GCD as implemented here would require at most $n$ clock cycles for an $n$-bit circuit. 
+Our first starting point was designing a circuit that computed a 3-bit GCD. This circuit can be seen in Figure \ref{fig:gcd}. Once this circuit was created, it took some refining to ensure that it would act as expected. A GCD circuit, as implemented here, would require at most $n$ clock cycles for an $n$-bit circuit. Once the circuit was created, we were then able to create polynomials for the nets in the circuits.
 
 \begin{figure}
 \includegraphics[scale=0.35]{images/gcd_page.png}
 \caption{Binary GCD Algorithm for $3$ bits}
 \label{fig:gcd}
 \end{figure}
+
+We first implemented the comparator circuit. The ring consisted of the primary inputs, the fan out branches, and the primary outputs. Once all of the polynomials were instantiated, an ideal J miter was used with each polynomial as well as the vanishing polynomials of the circuit. This aspect of the project is most likely trivial but worth while to ensure that our final implementation was correct. 
+
+The GCD testing was conducted in similar fashion with the inputs, outputs, and nets of the circuit being instantiated into polynomials. There was a great deal of polynomials required for such a circuit. This process will need to be automated when dealing with circuits larger than 3 bits.
 
 \section{Findings}
 
