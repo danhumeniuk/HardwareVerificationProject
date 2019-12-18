@@ -1,6 +1,6 @@
 // GCD3 spec mining
 
-ring r = (2, X), (a0, a1, a2, b0, b1, b2, c0, c1, d0, d1, d2, n_a0, n_a1, n_a2, n_b0, n_b1, n_b2, n_c0, n_c1, m0, m1, m2, m3, n0, n1, n2, p0, q0, q1, r0, r1, e, g, t, z, sub1_a, sub1_b, sub2_a, sub2_b, amuxEn, bmuxEn, regAEn, regBEn, regCEn, regDEn, amux1, amux2, bmux1, bmux2, dmux1, dmux2, dmux3, D, A, B, C, n_C, n_B, n_A), lp;
+ring r = (2, X), (m0, m1, m2, m3, n0, n1, n2, p0, q0, q1, r0, r1, e, g, t, z, sub1_a, sub1_b, sub2_a, sub2_b, amuxEn, bmuxEn, regAEn, regBEn, regCEn, regDEn, amux1, amux2, bmux1, bmux2, dmux1, dmux2, dmux3, a0, a1, a2, b0, b1, b2, c0, c1, d0, d1, d2, n_a0, n_a1, n_a2, n_b0, n_b1, n_b2, n_c0, n_c1, D, A, B, C, n_A, n_B, n_C), lp;
 
 minpoly = X3 + X + 1;
 
@@ -155,18 +155,70 @@ poly f117 = sub2_b^2 + sub2_b;
 
 ideal J0 = f59, f60, f61, f62, f63, f64, f65, f66, f67, f68, f69, f70, f71, f72, f73, f74, f75, f76, f77, f78, f79, f80, f81, f82, f83, f84, f85, f86, f87, f88, f89, f90, f91, f92, f93, f94, f95, f96, f97, f98, f99, f100, f101, f102, f103, f104, f105, f106, f107, f108, f109, f110, f111, f112, f113, f114, f115, f116, f117;
 
-poly A_init = A + 1;
-poly B_init = B + 1;
+poly A_init = A + X2 + X;
+poly B_init = B + X + 1;
 poly C_init = C;
 
 ideal Jinit = A_init, B_init, C_init;
 //ideal Jinit = C_init;
 
-ideal Jt = J + J0 + Jinit;
+//ideal gb = slimgb(Jt);
+//gb = eliminate(gb, a0*a1*a2*b0*b1*b2*c0*c1*d0*d1*d2*n_a0*n_a1*n_a2*n_b0*n_b1*n_b2*n_c0*n_c1*m0*m1*m2*m3*n0*n1*n2*p0*q0*q1*r0*r1*e* g*t*z*sub1_a*sub1_b*sub2_a*sub2_b*amuxEn*bmuxEn*regAEn*regBEn*regCEn*regDEn*amux1*amux2*bmux1*bmux2*dmux1*dmux2*dmux3);
 
-ideal gb = slimgb(Jt);
+
+// Loop while state changes
+poly current_A = A + X2 + X;
+poly current_B = B + X + 1;
+poly current_C = C;
+poly current_D = D;
+
+ideal Jc;
+ideal Jt;
+ideal gb;
+
+printf("Initial state:");
+printf("%p", current_A);
+printf("%p", current_B);
+printf("%p", current_C);
+
+while (current_D == D)
+{
+	Jc = current_A, current_B, current_C;
+	Jt = J + J0 + Jc;
+
+	gb = groebner(Jt);
+	gb = eliminate(gb, a0*a1*a2*b0*b1*b2*c0*c1*d0*d1*d2*n_a0*n_a1*n_a2*n_b0*n_b1*n_b2*n_c0*n_c1*m0*m1*m2*m3*n0*n1*n2*p0*q0*q1*r0*r1*e* g*t*z*sub1_a*sub1_b*sub2_a*sub2_b*amuxEn*bmuxEn*regAEn*regBEn*regCEn*regDEn*amux1*amux2*bmux1*bmux2*dmux1*dmux2*dmux3);
+
+	// Get next A state
+	printf("Next A state:");
+	eliminate(gb, A*B*C*D*n_B*n_C);
+	current_A = subst(eliminate(gb, A*B*C*D*n_B*n_C)[1], n_A, A);
+
+	// Get next B state
+	printf("Next B state:");
+	eliminate(gb, A*B*C*D*n_A*n_C);
+	current_B = subst(eliminate(gb, A*B*C*D*n_A*n_C)[1], n_B, B);
+
+	// Get next C state
+	printf("Next C state:");
+	eliminate(gb, A*B*C*D*n_A*n_B);
+	current_C = subst(eliminate(gb, A*B*C*D*n_A*n_B)[1], n_C, C);
+
+	// Update the output to check for termination
+	current_D = eliminate(gb, A*B*C*n_A*n_B*n_C)[1];
+}
+
+printf("Done!");
+
+printf("GCD is: %p", subst(current_D, D, 0));
+
+printf("Finding specification polynomial...");
+
+current_C = C;
+//Jc = current_C;
+//Jt = J + J0 + Jc;
+Jt = J + J0;
+gb = slimgb(Jt);
 gb = eliminate(gb, a0*a1*a2*b0*b1*b2*c0*c1*d0*d1*d2*n_a0*n_a1*n_a2*n_b0*n_b1*n_b2*n_c0*n_c1*m0*m1*m2*m3*n0*n1*n2*p0*q0*q1*r0*r1*e* g*t*z*sub1_a*sub1_b*sub2_a*sub2_b*amuxEn*bmuxEn*regAEn*regBEn*regCEn*regDEn*amux1*amux2*bmux1*bmux2*dmux1*dmux2*dmux3);
-
-
-
+gb[25];
 

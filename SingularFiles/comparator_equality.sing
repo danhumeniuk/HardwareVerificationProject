@@ -1,77 +1,61 @@
 // Mining the spec from a 3-bit comparator
 
-ring r = (2, X), (a0, a1, a2, b0, b1, b2, m0, m1, m2, m3, n0, n1, n2, p0, e, g, t, z, A, B), lp;
-
-minpoly = X3 + X + 1;
+ring r = 0, (e, g, a0, a1, a2, b0, b1, b2, m0, m1, m2, m3, n0, n1, n2, p0, t, z, A, B), lp;
 
 // Comparator
 // First level
-poly f3 = m0 + a0 + b0 + 1; // XNOR
-poly f4 = m1 + a1 + b1 + 1;
-poly f5 = m2 + a2 + b2 + 1;
-poly f6 = m3 + (a2 * (b2 + 1));
+poly f1 = m0 - (1 - (a0 + b0 - (2 * a0 * b0))); // XNOR
+poly f2 = m1 - (1 - (a1 + b1 - (2 * a1 * b1)));
+poly f3 = m2 - (1 - (a2 + b2 - (2 * a2 * b2)));
+poly f4 = m3 - (a2 * (1 - b2));
 
 // Second level
-poly f7 = e + (m0 * m1 * m2);
-poly f8 = n0 + (m1 * m2);
-poly f9 = n1 + (a0 * (b0 + 1));
-poly f10 = n2 + (m2 * (a1 * (b1 + 1)));
+poly f5 = e - (m0 * m1 * m2);
+poly f6 = n0 - (m1 * m2);
+poly f7 = n1 - (a0 * (1 - b0));
+poly f8 = n2 - (m2 * (a1 * (1 - b1)));
 
 // Last level + output
-poly f11 = p0 + (n0 * n1);
-poly f12 = g + ((p0 + n2 + (p0 * n2)) + m3) + ((p0 + n2 + (p0 * n2)) * m3);;
+poly f9 = p0 - (n0 * n1);
+poly f10 = g - ((p0 + n2 - (p0 * n2)) + m3 - (m3 * (p0 + n2 - (p0 * n2))));
 // End Comparator
 
-poly f52 = A + a2 * X2 + a1 * X + a0;
-poly f53 = B + b2 * X2 + b1 * X + b0;
-
-// Comparator test
-poly f_spec = z + A + B + 1;
-poly f_m = t*(z + e) + 1;
-ideal Jmiter = (a2^2 + a2), (a1^2 + a1), (a0^2 + a0), (b2^2 + b2), (b1^2 + b1), (b0^2 + b0), (e^2 + e), (f_spec^2 + f_spec), (f_m^2 + f_m), (t^2 + t), f3, f4, f5, f6, f7, f52, f53, (m0^2 + m0), (m1^2 + m1), (m2^2 + m2), (m3^2 + m3), f_spec, f_m, (A^8 + A), (B^8 + B), (z^2 + z);
-
-// Check for equality
-//groebner(Jmiter);
+poly f11 = A - (4 * a2 + 2 * a1 + a0);
+poly f12 = B - (4 * b2 + 2 * b1 + b0);
 
 // VANISHING POLYS
-poly f100 = a2^2 + a2;
-poly f101 = a1^2 + a1;
-poly f102 = a0^2 + a0;
-poly f103 = b2^2 + b2;
-poly f104 = b1^2 + b1;
-poly f105 = e^2 + e;
-poly f106 = g^2 + g;
-poly f107 = m0^2 + m0;
-poly f108 = m1^2 + m1;
-poly f109 = m2^2 + m2;
-poly f110 = m3^2 + m3;
-poly f111 = n1^2 + n1;
-poly f112 = n0^2 + n0;
-poly f113 = n2^2 + n2;
-poly f114 = p0^2 + p0;
+poly f100 = a2^2 - a2;
+poly f101 = a1^2 - a1;
+poly f102 = a0^2 - a0;
+poly f103 = b2^2 - b2;
+poly f104 = b1^2 - b1;
+poly f105 = e^2 - e;
+poly f106 = g^2 - g;
+poly f107 = m0^2 - m0;
+poly f108 = m1^2 - m1;
+poly f109 = m2^2 - m2;
+poly f110 = m3^2 - m3;
+poly f111 = n1^2 - n1;
+poly f112 = n0^2 - n0;
+poly f113 = n2^2 - n2;
+poly f114 = p0^2 - p0;
+poly f115 = b0^2 - b0;
 
-poly f115 = A^8 + A;
-poly f116 = B^8 + B; 
 
 
 // New ideal for spec mining
-ideal Jspec = f3, f4, f5, f6, f7, f8, f9, f10, f11, f12, f52, f53;
+ideal Jspec = f1, f2, f3, f4, f5, f6, f7, f8, f9, f10;
 
-ideal Jvanish = f100, f101, f102, f103, f104, f105, f106, f107, f108, f109, f110, f111, f112, f113, f114, f115, f116;
+ideal Jvanish = f100, f101, f102, f103, f104, f105, f106, f107, f108, f109, f110, f111, f112, f113, f114, f115;
 
+ideal gb = eliminate(slimgb(Jspec + Jvanish), m0*m1*m2*m3*n0*n1*n2*p0);
 
+printf("Groebner Basis without word-level variables");
+gb;
 
-ideal gb = groebner(Jspec + Jvanish);
+printf("Groebner Basis with word-level variables");
+Jspec = f1, f2, f3, f4, f5, f6, f7, f8, f9, f10, f11, f12;
+eliminate(slimgb(Jspec + Jvanish), a0*a1*a2*b0*b1*b2*m0*m1*m2*m3*n0*n1*n2*p0);
 
 //Projection of variety
-gb = eliminate(gb, a0*a1*a2*b0*b1*b2*m0*m1*m2*m3*n0*n1*n2*p0*e);
-
-//poly spec = gb[3];
-
-// Test some inputs
-//poly test1 = subst(spec, A, X + 1, B, X + 1);
-//test1;
-
-//poly test2 = subst(spec, A, X2 + X + 1, B, 1);
-//test2;
-
+//gb = eliminate(gb, a0*a1*a2*b0*b1*b2*m0*m1*m2*m3*n0*n1*n2*p0*e);

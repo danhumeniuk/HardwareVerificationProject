@@ -56,11 +56,12 @@ poly f51 = n_b2^2 + n_b2;
 
 
 ideal J0 = f15, f16, f17, f18, f19, f20, f21, f22, f23, f24, f25, f26, f27, f28, f29, f30, f31, f32, f33, f50, f51;
-//ideal Jt = J + J0;
+ideal Jtest = J + J0;
 
 
-//ideal gb = groebner(Jt);
-//gb = eliminate(gb, a0*a1*a2*b0*b1*b2*c0*n_a0*n_a1*n_a2*n_b0*n_b1*n_b2*z0*z1*z2);
+ideal gb_spec = groebner(Jtest);
+gb_spec = eliminate(gb_spec, a0*a1*a2*b0*b1*b2*c0*n_a0*n_a1*n_a2*n_b0*n_b1*n_b2*z0*z1*z2);
+
 
 // Loop while state changes
 poly current_A = A + X2 + X + 1;
@@ -69,6 +70,10 @@ poly current_B = B + X + 1;
 ideal Jc;
 ideal Jt;
 ideal gb;
+
+printf("Initial state:");
+printf("%p", current_A);
+printf("%p", current_B);
 
 while (current_B != B)
 {
@@ -79,9 +84,14 @@ while (current_B != B)
 	gb = eliminate(gb, a0*a1*a2*b0*b1*b2*c0*n_a0*n_a1*n_a2*n_b0*n_b1*n_b2*z0*z1*z2);
 
 	// Get next A state
+	printf("Next A state:");
 	eliminate(gb, A*B*n_B*Z);
 	current_A = subst(eliminate(gb, A*B*n_B*Z)[1], n_A, A);
 
 	// Get next B state
+	printf("Next B state:");
+	eliminate(gb, A*B*n_A*Z);
 	current_B = subst(eliminate(gb, A*B*n_A*Z)[1], n_B, B);
 }
+
+printf("Done!");
