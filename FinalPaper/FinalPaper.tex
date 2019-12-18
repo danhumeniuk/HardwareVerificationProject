@@ -44,7 +44,9 @@ Our first starting point was designing a circuit that computed a 3-bit GCD. This
 
 We first implemented the comparator circuit. The ring consisted of the primary inputs, the fan out branches, and the primary outputs. Once all of the polynomials were instantiated, an ideal J miter was used with each polynomial as well as the vanishing polynomials of the circuit. This aspect of the project is most likely trivial but worth while to ensure that our final implementation was correct. 
 
-The GCD testing was conducted in similar fashion with the inputs, outputs, and nets of the circuit being instantiated into polynomials. There was a great deal of polynomials required for such a circuit. This process will need to be automated when dealing with circuits larger than 3 bits.
+The GCD testing was conducted in similar fashion with the inputs, outputs, and nets of the circuit being instantiated into polynomials. There was a great deal of polynomials required for such a circuit. This process will need to be automated when dealing with circuits larger than 3 bits. One of the difficulties in the process was learning how to write a multiplexer as a polynomial. Once discovered, it still became an annoyance but was easier than doing a multiplexer as a series of AND and Inverter gates. Once each circuit block was completed, we created a very long list of vanishing polynomials. Once the ideal was created, a Groebner basis was created using the $slimgb$ function in Singular. From here, we were able to determine the output D and the next states for inputs A and B. 
+
+For our implementation in the Singular file, we only wanted to see what the circuit would output as the next state and not the final output for D. D will output 0 iff the circuit has not found the GCD of the two inputs A and B. Once the conditions for output D were satisfied, an output other than 0 would be present. We implemented it this way because we wanted to see the next states of A and B as well and not run through all of the cycles required for the circuit. 
 
 \section{Findings}
 
