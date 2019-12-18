@@ -50,6 +50,8 @@ For our implementation in the Singular file, we only wanted to see what the circ
 
 \section{Findings}
 
+Our first finding was very interesting. When we were performing the verification, we were conducting the experiment over a finite field. This resulted in our discovery verification for this particular circuit would not work over a finite field as every element within a finite field divides every other element. Our circuit could have been simplified to returning either A or B as either one divides the other. To verify the circuit, we needed to add a subtraction component to the circuit.
+
 \section{Conclusion}
 
 \bibliographystyle{IEEEtran}
